@@ -11,8 +11,8 @@ const Layout = (props) => {
                         <h3> {props.title} </h3>
                         <span className={s.separator}></span>
                     </div>
-                    <div className={s.desc.full}>
-                        <p> {props.desc} </p>
+                    <div className={`${s.desc} ${s.full}`}>
+                        {props.children}
                     </div>
                 </article>
             </div>
