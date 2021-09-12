@@ -4,15 +4,8 @@ import { useState } from 'react';
 
 const PokemonCard = ({name, img, id, type, values, abilities, stats, base_experience, height, ...props}) => {
     const [isActive, setActive] = useState(false);
-    console.log(isActive)
-
     const handleClick = () => {
-        if (isActive) {
-            setActive(false);
-        } else {
-            setActive(true);
-        }
-        console.log('Click on ' + name)
+        setActive(!isActive);
     }
     return (
         <div className={s.root} onClick={handleClick}>
