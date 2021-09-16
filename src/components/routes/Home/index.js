@@ -1,157 +1,26 @@
 import Layout from "../../../components/Layout";
 import Header from "../../../components/Header";
-import Footer from "../../../components/Footer";
 import PokemonCard from "../../../components/PokemonCard";
 import LayoutImage from "../../../assets/bg1.jpg"
-import MenuHeader from "../../MenuHeader";
-
+import POKEMONS from "../../PokemonCard/pokemons";
 
 import '../button.css'
 import s from "./style.module.css"
+import {useState} from "react";
 
-const POKEMONS = [
-    {
-        "abilities": [
-            "keen-eye",
-            "tangled-feet",
-            "big-pecks"
-        ],
-        "stats": {
-            "hp": 63,
-            "attack": 60,
-            "defense": 55,
-            "special-attack": 50,
-            "special-defense": 50,
-            "speed": 71
-        },
-        "type": "flying",
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png",
-        "name": "pidgeotto",
-        "base_experience": 122,
-        "height": 11,
-        "id": 17,
-        "values": {
-            "top": "A",
-            "right": 2,
-            "bottom": 7,
-            "left": 5
-        }
-    },
-    {
-        "abilities": [
-            "intimidate",
-            "shed-skin",
-            "unnerve"
-        ],
-        "stats": {
-            "hp": 60,
-            "attack": 95,
-            "defense": 69,
-            "special-attack": 65,
-            "special-defense": 79,
-            "speed": 80
-        },
-        "type": "poison",
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/24.png",
-        "name": "arbok",
-        "base_experience": 157,
-        "height": 35,
-        "id": 24,
-        "values": {
-            "top": 5,
-            "right": 9,
-            "bottom": "A",
-            "left": "A"
-        }
-    },
-    {
-        "abilities": [
-            "static",
-            "lightning-rod"
-        ],
-        "stats": {
-            "hp": 35,
-            "attack": 55,
-            "defense": 40,
-            "special-attack": 50,
-            "special-defense": 50,
-            "speed": 90
-        },
-        "type": "electric",
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png",
-        "name": "pikachu",
-        "base_experience": 112,
-        "height": 4,
-        "id": 25,
-        "values": {
-            "top": 8,
-            "right": "A",
-            "bottom": 9,
-            "left": 6
-        }
-    },
-    {
-        "abilities": [
-            "overgrow",
-            "chlorophyll"
-        ],
-        "stats": {
-            "hp": 45,
-            "attack": 49,
-            "defense": 49,
-            "special-attack": 65,
-            "special-defense": 65,
-            "speed": 45
-        },
-        "type": "grass",
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-        "name": "bulbasaur",
-        "base_experience": 64,
-        "height": 7,
-        "id": 1,
-        "values": {
-            "top": 8,
-            "right": 4,
-            "bottom": 2,
-            "left": 7
-        }
-    },
-    {
-        "abilities": [
-            "blaze",
-            "solar-power"
-        ],
-        "stats": {
-            "hp": 39,
-            "attack": 52,
-            "defense": 43,
-            "special-attack": 60,
-            "special-defense": 50,
-            "speed": 65
-        },
-        "type": "fire",
-        "img": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png",
-        "name": "charmander",
-        "base_experience": 62,
-        "height": 6,
-        "id": 4,
-        "values": {
-            "top": 7,
-            "right": 6,
-            "bottom": 1,
-            "left": 4
-        }
-    }
-]
 
 
 const HomePage = ({onChangePage}) => {
+    const [pokemons, setPokemons] = useState(() => [...POKEMONS]);
+    const handleOpenPokemon = (id) => {
+        setPokemons((prevState) => prevState.map(pokemon => pokemon.id === id ? { ...pokemon, "active":!pokemon.active} : pokemon))
+    }
+
     const handleClickButton = (page) => {
         onChangePage && onChangePage(page);
     }
     return (
         <>
-            <MenuHeader />
             <Header title='Dmytro Honcharov Game' descr='React Learning' onClickButton={handleClickButton}/>
             <Layout title='Game' urlBg={LayoutImage} desc="First Layout">
                 <p>In the game two players face off against one another, one side playing as "blue", the other as "red"
@@ -168,8 +37,9 @@ const HomePage = ({onChangePage}) => {
             <Layout title='Cards' colorBg='red'>
                 <div className={s.flex}>
                     {
-                        POKEMONS.map(item => <PokemonCard key={item.id} name={item.name} img={item.img} id={item.id}
-                                                          type={item.type} values={item.values}/>)
+                        pokemons.map(item => <PokemonCard key={item.id} name={item.name} img={item.img} id={item.id}
+                                                          type={item.type} values={item.values}
+                                                          isActive={item.active} onClickPokemon={handleOpenPokemon}/>)
                     }
                 </div>
             </Layout>
@@ -178,7 +48,6 @@ const HomePage = ({onChangePage}) => {
                 <p>Third</p>
                 <img src={LayoutImage} alt='Logo' width='50%'/>
             </Layout>
-            <Footer/>
         </>
     );
 };

@@ -5,11 +5,12 @@ import cn from 'classnames';
 
 import s from './index.module.css'
 
-const PokemonCard = ({name, img, id, type, values, abilities, stats, base_experience, height, ...props}) => {
-    const [isActive, setActive] = useState(false);
+const PokemonCard = ({name, img, id, type, values, abilities, stats, base_experience, height, isActive = false,
+                      onClickPokemon, ...props}) => {
     const handleClick = () => {
-        setActive(!isActive);
+        onClickPokemon && onClickPokemon(id)
     }
+
     return (
         <div className={s.root} onClick={handleClick}>
            <div className={cn(s.pokemonCard, {[s.active]: isActive})}>
