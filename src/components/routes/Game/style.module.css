@@ -1,0 +1,28 @@
+.root {
+    background: #202736;
+    background-attachment: fixed;
+    background-size: cover;
+    position: relative;
+    min-height: 100vh;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.root::before {
+    content: '';
+    position: fixed;
+    background: url('../../../assets/Stars.svg');
+    background-attachment: fixed;
+    width: 100%;
+    min-height: 100vh;
+    z-index: -1;
+		animation: stars-move-in 1000ms 300ms forwards;
+    opacity: 0;
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
