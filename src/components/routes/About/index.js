@@ -1,8 +1,15 @@
+
+
 const AboutPage = () => {
+
+    const handleClick = () => {
+    }
     return (
         <>
             <h1>About page</h1>
-            <div>My about page</div>
+            <button onClick={handleClick}>
+                Change Theme
+            </button>
         </>
     )
 }

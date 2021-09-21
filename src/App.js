@@ -10,12 +10,15 @@ import AboutPage from "./components/routes/About";
 import ContactPage from "./components/routes/Contact";
 
 import s from './style.module.css'
+import {FirebaseContext} from './context/firebaseContext'
+import Firebase from "./services/firebase";
 
 
 const App  = () => {
     const match = useRouteMatch('/')
-    console.log('match', match)
+
     return (
+        <FirebaseContext.Provider value={new Firebase()}>
         <Switch>
             <Route path="/404" component={NotFoundPage}/>
             <Route>
@@ -35,6 +38,7 @@ const App  = () => {
                 </>
             </Route>
         </Switch>
+        </FirebaseContext.Provider>
     )
 }
 
