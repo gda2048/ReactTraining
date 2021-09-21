@@ -1,7 +1,4 @@
-import {PokemonContext} from '../../../../../context/pokemonContext';
-
-
 const FinishPage = () => {
-    return <PokemonContext.Provider value={[]}> Finish Game </PokemonContext.Provider>
+    return <div> Finish Game </div>
 }
 export default FinishPage;
