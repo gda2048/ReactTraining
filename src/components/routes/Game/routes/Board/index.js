@@ -9,17 +9,21 @@ import PlayerBoard from "./component/PlayerBoard";
 const counterWIN = (board, player1, player2) => {
     let p1Count = player1.length;
     let p2Count = player2.length;
+    let p1 = []
+    let p2 = []
     board.forEach(
         item => {
             if (item.card.possession === 'red'){
+                p2.push(item.card)
                 p2Count++;
             }
             if (item.card.possession === 'blue'){
+                p1.push(item.card)
                 p1Count++;
             }
         }
     )
-    return [p1Count, p2Count]
+    return [p1, p2, p1Count, p2Count]
 }
 
 const BoardPage = () => {
@@ -76,7 +80,7 @@ const BoardPage = () => {
 
     useEffect(() => {
         if (steps === 9){
-            const [count1, count2] = counterWIN(board, player1, player2)
+            const [p1, p2, count1, count2] = counterWIN(board, player1, player2)
             if (count1 > count2){
                 alert('WIN')
             } else if (count1 < count2){
@@ -84,6 +88,10 @@ const BoardPage = () => {
             } else {
                 alert('DRAW')
             }
+            pokemons.p1 = p1;
+            pokemons.p2 = p2;
+            pokemons.isFinished = true;
+            history.push('/game/finish');
         }
     }, [steps])
 

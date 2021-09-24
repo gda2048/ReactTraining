@@ -1,0 +1,14 @@
+.flex {
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.card {
+	width: 100%;
+	max-width: 10vw;
+	height: 20vh;
+	cursor: pointer;
+}
