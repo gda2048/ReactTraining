@@ -4,6 +4,8 @@ import {PokemonContext} from "../../../../../context/pokemonContext";
 import PokemonCard from "../../../../PokemonCard";
 import {useHistory} from "react-router-dom";
 import PlayerBoard from "./component/PlayerBoard";
+import ArrowChoice from "./component/ArrowChoice";
+import Result from "./component/Result";
 
 
 const counterWIN = (board, player1, player2) => {
@@ -31,13 +33,16 @@ const BoardPage = () => {
     const [board, setBoard] = useState([]);
     const [player1, setPlayer1] = useState(() => {
         return Object.values(pokemons).map(item => ({...item, possession: 'blue'}))
-    });
+    })
+    const [playerTurn, setTurn] = useState(1)
     const [player2, setPlayer2] = useState([]);
     const [steps, setSteps] = useState(0);
+    const [end, setEnd] = useState(null);
     const [choiceCard, setChoiceCard] = useState(null);
     const history = useHistory();
     console.log('b', board)
     console.log('p', player2)
+    console.log(player1, player2, steps, playerTurn)
     useEffect(async () => {
         const boardResponse = await fetch('https://reactmarathon-api.netlify.app/api/board')
         const boardRequest = await boardResponse.json()
@@ -49,7 +54,7 @@ const BoardPage = () => {
     const handleClickBoardPlate = async (position) => {
         console.log('p', position)
         console.log('c', choiceCard)
-        if (choiceCard) {
+        if (choiceCard && playerTurn===choiceCard.player) {
             const params = {
                 position,
                 card: choiceCard,
@@ -66,6 +71,7 @@ const BoardPage = () => {
             console.log('res', request)
             setBoard(request.data)
             setSteps(prevState => prevState + 1)
+            setTurn(prevState => (prevState === 1)?2:1)
             if (choiceCard.player === 1){
                 setPlayer1(prevState => prevState.filter(item => item.id !== choiceCard.id))
             }
@@ -81,29 +87,31 @@ const BoardPage = () => {
     useEffect(() => {
         if (steps === 9){
             const [p1, p2, count1, count2] = counterWIN(board, player1, player2)
-            if (count1 > count2){
-                alert('WIN')
-            } else if (count1 < count2){
-                alert('LOSE')
-            } else {
-                alert('DRAW')
-            }
             pokemons.p1 = p1;
             pokemons.p2 = p2;
             pokemons.isFinished = true;
-            history.push('/game/finish');
+
+            if (count1 > count2){
+                setEnd('WIN')
+            } else if (count1 < count2){
+                setEnd('LOSE')
+            } else {
+                setEnd('DRAW')
+            }
         }
     }, [steps])
 
     return (
         <div>
             <div className={s.root}>
+                <ArrowChoice side={playerTurn} stop={pokemons.isFinished}/>
                 <div className={s.playerOne}>
-                    <PlayerBoard player={1} cards={player1}
-                                 onClickCard = {(card) => setChoiceCard(card)}/>
+                    <PlayerBoard player={1} cards={player1} turn={playerTurn}
+                                 onClickCard = {(card) => {setChoiceCard(card)}}/>
                 </div>
                 <div className={s.playerTwo}>
-                    <PlayerBoard player={2} cards={player2} onClickCard = {(card) => setChoiceCard(card)}/>
+                    <PlayerBoard player={2} cards={player2} turn={playerTurn}
+                                 onClickCard = {(card) => {setChoiceCard(card)}}/>
                 </div>
                 <div className={s.board}>
                     {
@@ -117,6 +125,7 @@ const BoardPage = () => {
                         )
                     }
                 </div>
+                {end && <Result type={end}/>}
             </div>
         </div>
     );

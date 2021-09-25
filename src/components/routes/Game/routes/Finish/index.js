@@ -24,6 +24,7 @@ const FinishPage = () => {
     }
     console.log('card', card)
     const finishGame = async () => {
+        card.player = 1;
         if (cardID){
             await firebase.addPokemon(card, () => {})
         }
