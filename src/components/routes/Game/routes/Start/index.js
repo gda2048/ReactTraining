@@ -1,15 +1,21 @@
 import '../../../button.css'
 import s from './style.module.css'
 import PokemonCard from "../../../../PokemonCard";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useHistory} from 'react-router-dom'
-import {FirebaseContext} from "../../../../../context/firebaseContext";
-import {PokemonContext} from "../../../../../context/pokemonContext";
+
+import {
+    selectPokemonsData, getPokemonsAsync, selectPok, selectSelectedPokemons, emptyPokemons,
+} from "../../../../../store/pokemons";
+import {useDispatch, useSelector} from "react-redux";
+import {emptyBoard} from "../../../../../store/board";
 
 
 const StartPage = ({onChangePage}) => {
-    const firebase = useContext(FirebaseContext)
-    const pokemonsContext = useContext(PokemonContext)
+    const pokemonsRedux = useSelector(selectPokemonsData)
+    const pokemonsSelectedRedux = useSelector(selectSelectedPokemons)
+
+    const dispatch = useDispatch()
     const [pokemons, setPokemons] = useState({});
 
     const history = useHistory()
@@ -17,69 +23,36 @@ const StartPage = ({onChangePage}) => {
         history.push('/game/board')
     }
 
-    const getPokemons = async () => {
-        const response = await firebase.getPokemonsOnce();
-        setPokemons(response);
-    }
 
     useEffect(() => {
-        firebase.getPokemonSocket((pokemons) => {setPokemons(pokemons)} )
-        return () => {firebase.offPokemonSocket()}
+        dispatch(emptyBoard())
+        dispatch(emptyPokemons())
+        dispatch(getPokemonsAsync());
     }, [])
+    useEffect(() => {
+        setPokemons(pokemonsRedux);
+    }, [pokemonsRedux])
 
-    const handleOpenPokemon = (id) => {
-        setPokemons(prevState => {
-            return Object.entries(prevState).reduce((acc, item) => {
-                const pokemon = {...item[1]};
-                const key = item[0];
-                if (pokemon.id === id) {
-                    pokemon.active = !pokemon.active;
-                    firebase.postPokemon(key, pokemon)
-                }
-                acc[key] = pokemon;
-                return acc;
-                },
-                {}
-            );
-        });
-    };
 
     const selectPokemon = (key) => {
         const pokemon = { ...pokemons[key] }
+
         if (selectPossible(pokemon.selected)){
-            pokemonsContext.selectPokemon(key, pokemon)
-            setPokemons(prevState => ({
-                ...prevState,
-                [key]: {
-                    ...prevState[key],
-                    selected: !prevState[key].selected
-                }
-            }))
+            dispatch(selectPok({key, pokemon}))
+            setPokemons(prevState => ({...prevState,
+                    [key]: {...prevState[key], selected: !prevState[key].selected}}))
         }
 	}
 
 	const selectPossible = (selected) => {
-        return Object.keys(pokemonsContext.pokemons).length < 5 || selected
+        return Object.keys(pokemonsSelectedRedux).length < 5 || selected
     }
-
-    const handleNewPokemon = () => {
-        const pok = Object.entries(pokemons)[Math.floor(Math.random() * Object.entries(pokemons).length)][1];
-        firebase.addPokemon(pok, async () => {await getPokemons()} )
-    }
-    console.log(pokemons);
 
     return (
         <div>
             <div>
                 <div style={{ marginBottom: "10%" }}>
-                    <button onClick={handleNewPokemon}>
-                        ADD NEW POKEMON
-                    </button>
-
-                    <button
-                        onClick={StartGameClick}
-                        disabled={Object.keys(pokemonsContext.pokemons).length < 5}
-                    >
+                    <button onClick={StartGameClick} disabled={Object.keys(pokemonsSelectedRedux).length < 5}>
                         Start Game
                     </button>
                 </div>

@@ -1,14 +1,16 @@
 import '../../../button.css'
 import s from "./style.module.css";
 import PokemonCard from "../../../../PokemonCard";
-import {FirebaseContext} from "../../../../../context/firebaseContext";
-import {PokemonContext} from "../../../../../context/pokemonContext";
-import {useContext, useState} from "react";
+import {useState} from "react";
 import {useHistory} from "react-router-dom";
+import FirebaseClass from "../../../../../services/firebase";
+import {useSelector} from "react-redux";
+import {selectP1, selectP2, selectIsFinished} from "../../../../../store/board";
 
 const FinishPage = () => {
-    const firebase = useContext(FirebaseContext);
-    const {pokemons} = useContext(PokemonContext);
+    const p1 = useSelector(selectP1)
+    const p2 = useSelector(selectP2)
+    const isFinished = useSelector(selectIsFinished)
     const history = useHistory();
     const [cardID, setCardID] = useState(null)
     const [card, setCard] = useState(null)
@@ -22,19 +24,13 @@ const FinishPage = () => {
             setCard(item);
         }
     }
-    console.log('card', card)
     const finishGame = async () => {
-        card.player = 1;
-        if (cardID){
-            await firebase.addPokemon(card, () => {})
-        }
-        pokemons.p1 = []
-        pokemons.p2 = []
-        pokemons.isFinished = false
-
+       if (card && cardID) {
+           await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'}, () => {})
+       }
         history.replace('/game')
     }
-    if (!pokemons.isFinished){
+    if (!isFinished){
         finishGame()
     }
 
@@ -42,7 +38,7 @@ const FinishPage = () => {
         <div>
             <div className={s.flex}>
                 {
-                    pokemons.p1.map((item) =>
+                    p1.map((item) =>
                         <PokemonCard key={item.key} values={item.values} className={s.card}
                                      name={item.name} type={item.type} id={item.id} img={item.img} isActive minimize/>
 
@@ -52,7 +48,7 @@ const FinishPage = () => {
             <button onClick={finishGame}>END GAME</button>
             <div className={s.flex}>
                 {
-                    pokemons.p2.map((item) =>
+                    p2.map((item) =>
                         <div onClick={() => handleClick(item)} className={s.card}>
                             <PokemonCard key={item.key} values={item.values} name={item.name}
                                          type={item.type} id={item.id} img={item.img} isSelected={item.id===cardID}

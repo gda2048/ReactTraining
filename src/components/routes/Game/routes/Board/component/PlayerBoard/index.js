@@ -5,7 +5,6 @@ import {useState} from "react";
 
 const PlayerBoard = ({turn, player, cards, onClickCard}) => {
     const [isSelected, setSelected] = useState(null);
-    console.log('tp', turn, player)
     return (
         <div>
             {
