@@ -13,7 +13,8 @@ const GamePage = () => {
     }
     const match = useRouteMatch();
     return (
-        <PokemonContext.Provider value={{pokemons: pokemons, selectPokemon: handlePokemon}}>
+        <PokemonContext.Provider value={{pokemons: pokemons, selectPokemon: handlePokemon, isFinished: false,
+            pl1: [], pl2: []}}>
         <Switch>
             <Route path={`${match.path}/`} exact component={StartPage} />
             <Route path={`${match.path}/board`} component={BoardPage} />

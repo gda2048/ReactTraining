@@ -4,3 +4,9 @@
   align-items: center;
   flex-wrap: wrap;
 }
+.card {
+	width: 100%;
+	max-width: 10vw;
+	height: 25vh;
+	cursor: pointer;
+}

@@ -38,7 +38,7 @@ const HomePage = ({onChangePage}) => {
                 <div className={s.flex}>
                     {
                         pokemons.map(item => <PokemonCard key={item.id} name={item.name} img={item.img} id={item.id}
-                                                          type={item.type} values={item.values}
+                                                          type={item.type} values={item.values} className={s.card}
                                                           isActive={item.active} onClickPokemon={handleOpenPokemon}/>)
                     }
                 </div>
