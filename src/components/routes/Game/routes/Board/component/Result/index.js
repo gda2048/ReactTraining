@@ -6,18 +6,19 @@ import Draw from './assets/draw.png';
 import {useHistory} from "react-router-dom";
 
 const Result = ({ type }) => {
-   const [url, setUrl] = useState(null);
+   console.log(type, 'type')
+    const [url, setUrl] = useState(null);
    const history = useHistory()
 
    useEffect(() => {
        switch (type) {
-           case 'win':
+           case 'WIN':
                setUrl(YouWin);
                break;
-           case 'lose':
+           case 'LOSE':
                setUrl(YouLose);
                break;
-           case 'draw':
+           case 'DRAW':
                setUrl(Draw);
                break;
            default:
@@ -28,7 +29,7 @@ const Result = ({ type }) => {
     return (
         <div className={s.result}>
             <img src={url} alt="result" />
-            <button onClick={() => {history.replace('/game')}}>End Game</button>
+            <button onClick={() => {history.replace('/game/finish')}}>End Game</button>
         </div>
     );
 };
