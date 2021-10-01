@@ -17,15 +17,15 @@ const MenuHeader = ({ bgActive = false }) => {
         setOpenModel(prevState => !prevState)
     }
 
-    const handleSubmitLoginForm = async ({email, password}) => {
+    const handleSubmitLoginForm = async ({email, password, isLogin}) => {
         const requestOptions = {
             method: 'POST',
             body: JSON.stringify({email, password, returnSecureToken: true})
         }
         const response = await fetch(
-            'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDqdkgenjUR8ch9nA3ceshvxYaxB3ZdWmg',
+            `https://identitytoolkit.googleapis.com/v1/accounts:${isLogin ? 'signInWithPassword' : 'signUp'}?key=AIzaSyDulN3LR-G9esYIsIYyLmCRqL5OlbK6tQU`,
             requestOptions
-        ).then(res => res.json())
+        ).then(res => res.json());
 
         if (response.hasOwnProperty('error')){
             NotificationManager.error(response.error.message, 'Wrong!');

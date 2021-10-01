@@ -1,0 +1,13 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.change {
+    padding: 0;
+    background-color: transparent;
+    color: #000;
+    font-weight: normal;
+    border: none!important;
+    width: 100px;
+    text-align: center;
+}

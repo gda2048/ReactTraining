@@ -21,7 +21,7 @@ const App  = () => {
     const isPadding = location.pathname === '/' || location.pathname === '/game/board';
 
     return (
-        <div>
+        <>
             <NotificationContainer/>
             <Switch>
                 <Route path="/404" component={NotFoundPage}/>
@@ -42,7 +42,7 @@ const App  = () => {
                     </>
                 </Route>
             </Switch>
-        </div>
+        </>
     )
 }
 

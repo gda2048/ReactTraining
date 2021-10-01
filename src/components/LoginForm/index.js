@@ -1,19 +1,22 @@
 import {useState} from "react";
 import Input from "../Modal/components/Input";
 
+import s from './style.module.css'
+
 const LoginForm = ({onSubmit}) => {
     const [email, setEmail] = useState('some@mail.ru')
     const [password, setPassword] = useState('')
+    const [isLogin, setIsLogin] = useState(false)
 
-    const handleSubmit = (e) => {
+    const handleClick = (e) => {
         e.preventDefault()
-        onSubmit && onSubmit({email, password});
+        onSubmit && onSubmit({email, password, isLogin});
         setEmail('')
         setPassword('')
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleClick}>
             <div>
                 <Input
                       label="Email"
@@ -31,9 +34,14 @@ const LoginForm = ({onSubmit}) => {
                       onChange={(e) => setPassword(e.target.value)}
                 />
             </div>
-             <button>
-                Login
-            </button>
+            <div className={s.wrapper}>
+                <button>
+                    {isLogin ? 'Login' : 'Register'}
+                </button>
+                <button className={s.change} onClick={() => setIsLogin(prevState => !prevState)}>
+                    {isLogin ? 'Register':'Login'}
+                </button>
+            </div>
         </form>
     )
 }
