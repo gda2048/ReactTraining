@@ -1,8 +1,7 @@
 const NotFoundPage = () => {
     return (
         <>
-            <h1>Contact page</h1>
-            <div>My contact page</div>
+            <h1>404 NOT FOUND</h1>
         </>
     )
 }

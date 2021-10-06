@@ -33,7 +33,6 @@ const StartPage = ({onChangePage}) => {
         setPokemons(pokemonsRedux);
     }, [pokemonsRedux])
 
-
     const selectPokemon = (key) => {
         const pokemon = { ...pokemons[key] }
 
@@ -47,7 +46,6 @@ const StartPage = ({onChangePage}) => {
 	const selectPossible = (selected) => {
         return Object.keys(pokemonsSelectedRedux).length < 5 || selected
     }
-
     return (
         <div>
             <div>

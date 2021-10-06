@@ -1,4 +1,6 @@
 import { useLocation, Route, Switch, Redirect  } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
 import cn from 'classnames'
 
 import HomePage from "./components/routes/Home";
@@ -14,11 +16,22 @@ import {NotificationContainer} from "react-notifications";
 
 import s from './style.module.css';
 import 'react-notifications/lib/notifications.css';
+import {getUserAsync, selectUserLoading} from "./store/user";
+
 
 
 const App  = () => {
+    const isLoading = useSelector(selectUserLoading);
     const location = useLocation();
     const isPadding = location.pathname === '/' || location.pathname === '/game/board';
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(getUserAsync());
+    }, [])
+    console.log(isLoading, 'IL')
+    if (isLoading) {
+        return 'Loading..'
+    }
 
     return (
         <>

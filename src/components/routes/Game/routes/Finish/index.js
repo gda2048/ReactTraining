@@ -6,6 +6,8 @@ import {useHistory} from "react-router-dom";
 import FirebaseClass from "../../../../../services/firebase";
 import {useSelector} from "react-redux";
 import {selectP1, selectP2, selectIsFinished} from "../../../../../store/board";
+import {selectLocalId} from "../../../../../store/user";
+
 
 const FinishPage = () => {
     const p1 = useSelector(selectP1)
@@ -14,6 +16,7 @@ const FinishPage = () => {
     const history = useHistory();
     const [cardID, setCardID] = useState(null)
     const [card, setCard] = useState(null)
+    const localId = useSelector(selectLocalId)
 
     const handleClick = (item) => {
         if (item.id === cardID){
@@ -26,9 +29,9 @@ const FinishPage = () => {
     }
     const finishGame = async () => {
        if (card && cardID) {
-           await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'}, () => {})
+           await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'}, localId)
        }
-        history.replace('/game')
+       history.replace('/game')
     }
     if (!isFinished){
         finishGame()
