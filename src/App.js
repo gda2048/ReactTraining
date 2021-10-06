@@ -17,6 +17,7 @@ import {NotificationContainer} from "react-notifications";
 import s from './style.module.css';
 import 'react-notifications/lib/notifications.css';
 import {getUserAsync, selectUserLoading} from "./store/user";
+import UserPage from "./components/routes/User";
 
 
 
@@ -47,6 +48,7 @@ const App  = () => {
                                 <Route path="/home" component={HomePage}/>
                                 <PrivateRoute path="/game" component={GamePage}/>
                                 <PrivateRoute path="/about" component={AboutPage}/>
+                                <PrivateRoute path="/user" component={UserPage}/>
                                 <Route path="/contact" component={ContactPage}/>
                                 <Route render={() => <Redirect to="/404" />}/>
                             </Switch>

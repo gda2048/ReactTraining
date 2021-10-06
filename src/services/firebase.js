@@ -32,7 +32,7 @@ class Firebase {
 
   addPokemon = (data, localId) => {
     const newKey = this.database.ref().child('pokemons').push().key;
-    this.database.ref(`${localId}/pokemons/` + newKey).set(data).then(()=>{});
+    this.database.ref(`${localId}/pokemons/` + newKey).set(data);
   }
 
   offPokemonSocket = () => {

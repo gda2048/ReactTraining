@@ -5,7 +5,8 @@ import Modal from "../Modal";
 import LoginForm from "../LoginForm";
 import {NotificationManager} from "react-notifications";
 import {useDispatch} from "react-redux";
-import {getUserAsync} from "../../store/user";
+import {getUserAsync, removeUser} from "../../store/user";
+import {useHistory} from "react-router-dom";
 
 const KEY = 'AIzaSyDqdkgenjUR8ch9nA3ceshvxYaxB3ZdWmg'
 
@@ -26,10 +27,17 @@ const MenuHeader = ({ bgActive = false }) => {
     const [activeMenu, setActiveMenu] = useState(false);
     const [isOpenModel, setOpenModel] = useState(false)
     const dispatch = useDispatch();
+    const history = useHistory()
 
     const handleMenu = () => {
         setActiveMenu(prevState=>!prevState)
     }
+
+    const handleClickLogout = () => {
+        localStorage.removeItem('idToken');
+        dispatch(removeUser());
+        history.replace('/');
+  };
 
     const handleClickLogin = () => {
         setOpenModel(prevState => !prevState)
@@ -62,7 +70,7 @@ const MenuHeader = ({ bgActive = false }) => {
         <>
             <Menu openMenu={activeMenu} onChangeMenu={handleMenu}/>
             <NavBar openMenu={activeMenu} onChangeMenu={handleMenu} bgActive={bgActive}
-                    onClickLogin={handleClickLogin}/>
+                    onClickLogin={handleClickLogin} onClickLogout={handleClickLogout}/>
             <Modal title="Authentication" onCloseModal={handleClickLogin} isOpen={isOpenModel}>
                 <LoginForm isResetField={!isOpenModel} onSubmit={handleSubmitLoginForm}/>
             </Modal>
