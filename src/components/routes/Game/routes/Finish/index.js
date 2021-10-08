@@ -6,7 +6,6 @@ import {useHistory} from "react-router-dom";
 import FirebaseClass from "../../../../../services/firebase";
 import {useDispatch, useSelector} from "react-redux";
 import {selectPlayer1, selectPlayer2, selectIsFinished, emptyBoard} from "../../../../../store/board";
-import {selectLocalId} from "../../../../../store/user";
 import {emptyPokemons} from "../../../../../store/pokemons";
 
 
@@ -30,14 +29,15 @@ const FinishPage = () => {
     }
     const finishGame = async () => {
        if (card && cardID) {
-           await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'})
+           console.log(card, 'card')
+           const res = await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'})
            dispatch(emptyBoard())
            dispatch(emptyPokemons())
        }
        history.replace('/game')
     }
     if (!isFinished){
-        finishGame()
+        history.replace('/game')
     }
 
     return (

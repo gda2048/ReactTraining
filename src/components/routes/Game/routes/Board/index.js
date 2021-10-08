@@ -18,13 +18,15 @@ const counterWIN = (board, player1, player2) => {
     let p2 = []
     board.forEach(
         item => {
-            if (item.card.possession === 'red'){
-                p2.push(item.card)
-                p2Count++;
-            }
-            if (item.card.possession === 'blue'){
-                p1.push(item.card)
-                p1Count++;
+            if (item.card) {
+                if (item.card.possession === 'red') {
+                    p2.push(item.card)
+                    p2Count++;
+                }
+                if (item.card.possession === 'blue') {
+                    p1.push(item.card)
+                    p1Count++;
+                }
             }
         }
     )
@@ -69,76 +71,86 @@ const BoardPage = () => {
 
     const [end, setEnd] = useState(null);
 
+    const handleClickBoardPlate = async position => {
+      console.log(playerTurn, position, 'pp')
+      if (playerTurn !== 2 && (typeof choiceCard !== 'object' || choiceCard === null)) return;
+
+      const params = {
+        currentPlayer: 'p1',
+        hands: {
+          p1: player1,
+          p2: player2,
+        },
+        move: {
+          poke: { ...choiceCard },
+          position,
+        },
+        board: serverBoard,
+      };
+
+      if (playerTurn === 2) {
+        params.currentPlayer = 'p2';
+        params.move = null;
+      }
+
+      if (choiceCard?.player === 1) {
+        setPlayer1State(prevState => prevState.filter(({ id }) => id !== choiceCard.id));
+      }
+
+      setBoard(prevState =>
+        prevState.map(item => (item.position === position ? { ...item, card: choiceCard } : item)),
+      );
+
+      setSteps(prevstate => prevstate + 1);
+
+      const game = await request.game(params);
+
+      setBoard(returnBoard(game.oldBoard || [0, 0, 0, 0, 0, 0, 0, 0, 0]));
+
+      if (game.move !== null) {
+        const idAi = game.move.poke.id;
+
+        setTimeout(() => {
+          setPlayer2State(
+            (
+              prevState, // TODO: fix
+            ) => prevState.map(item => (item.id === idAi ? { ...item, active: true } : item)),
+          );
+        }, 500);
+
+        setTimeout(() => {
+          setPlayer2State(prevState => prevState.filter(({ id }) => id !== idAi));
+          setServerBoard(game.board);
+          setBoard(returnBoard(game.board));
+          setSteps(prevstate => prevstate + 1);
+          setChoiceCard(null);
+          setTurn(1);
+        }, 1500);
+      }
+    };
+
+
     useEffect(async () => {
         const boardRequest = await request.getBoard()
         setBoard(boardRequest.data)
         const player2Request = await request.gameStart({
             pokemons: Object.values(pokemonsSelector)
         });
-        setTimeout(() => {
-            setTurn(Math.floor(Math.random() * 2) + 1)
-        },2000)
+
+        let timerId = setInterval(() => setTurn(Math.floor(Math.random() * 2) + 1), 200);
+        setTimeout(() => clearInterval(timerId), 2000);
 
         dispatch(setPlayer2(player2Request.data))
         setPlayer2State(player2Request.data.map( item => ({...item, possession: 'red'})));
+
     }, []);
 
-    const handleClickBoardPlate = async (position) => {
-        if (typeof choiceCard === 'object') {
-            const params = {
-                currentPlayer: 'p1',
-                hands: {
-                    p1: player1,
-                    p2: player2
-                },
-                move: {
-                    poke: {
-                        ...choiceCard
-                    },
-                    position
-                },
-                board: serverBoard
-            }
-            if (choiceCard.player === 1) {
-                setPlayer1State(prevState => prevState.filter(item => item.id !== choiceCard.id))
-            }
-
-            setBoard(prevState => prevState.map(item => {
-                if (position === item.position) {
-                    return {...item, card: choiceCard}
-                }
-                return item;
-            }))
-
-            const game = await request.game(params);
-            setBoard(returnBoard(game.oldBoard))
-
-            setSteps(prevState => prevState + 1)
-            setTurn(prevState => (prevState === 1) ? 2 : 1)
-            if (game.move !== null) {
-                const idAi = game.move.poke.id;
-                setTimeout( () => {
-                        setPlayer2State(prevState => prevState.map(item => {
-                            if (item.id === idAi){
-                                return {
-                                    ...item,
-                                    selected: true
-                                }
-                            }
-                            return item;
-                        }))
-                    }, 1000
-                )
-                setTimeout(() => {
-                    setPlayer2State(() => game.hands.p2.pokes.map(item=>item.poke))
-                    setServerBoard(game.board)
-                    setBoard(returnBoard(game.board))
-                    setSteps(prevState => prevState + 1)
-                }, 1500)
-
-            }
+    useEffect(() => {
+        console.log(playerTurn, steps)
+        if (playerTurn === 2 && steps===0) {
+            handleClickBoardPlate();
         }
-    }
+    }, [playerTurn])
 
     useEffect(() => {
         if (steps === 9){
