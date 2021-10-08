@@ -1,13 +1,17 @@
-.wrapper {
+.flex {
     display: flex;
+    align-items: center;
+    font-size: 18px;
     justify-content: space-between;
 }
-.change {
-    padding: 0;
-    background-color: transparent;
-    color: #000;
-    font-weight: normal;
-    border: none!important;
-    width: 100px;
-    text-align: center;
+.link {
+    color: #252934;
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: 200ms;
+    cursor: pointer;
+}
+
+.link:hover {
+    color: #f300b4;
 }
