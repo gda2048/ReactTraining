@@ -1,42 +1,31 @@
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/database'
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDqdkgenjUR8ch9nA3ceshvxYaxB3ZdWmg",
-  authDomain: "pokemon-game-599b0.firebaseapp.com",
-  databaseURL: "https://pokemon-game-599b0-default-rtdb.firebaseio.com",
-  projectId: "pokemon-game-599b0",
-  storageBucket: "pokemon-game-599b0.appspot.com",
-  messagingSenderId: "882603497944",
-  appId: "1:882603497944:web:e1e4b9f0da1f060fdb7aad"
-};
-
-const fire = firebase.initializeApp(firebaseConfig);
-
 class Firebase {
   constructor() {
-    this.fire = fire
-    this.database = this.fire.database()
-  }
-  getPokemonsOnce = async () => {
-    return await this.database.ref('pokemons').once('value').then(snapshot => snapshot.val())
+    this.host = "https://pokemon-game-599b0-default-rtdb.firebaseio.com"
+    this.localID = null
   }
 
-  getPokemonSocket = (cb) => {
-    this.database.ref('pokemons').on('value', (snapshot) => {cb(snapshot.val())})
+  token = () => localStorage.getItem('idToken')
+
+  setLocalID = (localID) => {
+    this.localID = localID;
   }
 
-  postPokemon = (key, pokemon) => {
-    this.database.ref(`pokemons/${key}`).set(pokemon);
+  getPokemons = async () => {
+    if (this.localID) {
+      return await fetch(`${this.host}/${this.localID}/pokemons.json?auth=${this.token()}`).then(res => res.json())
+    } else {
+      return []
+    }
   }
 
-  addPokemon = (data, localId) => {
-    const newKey = this.database.ref().child('pokemons').push().key;
-    this.database.ref(`${localId}/pokemons/` + newKey).set(data);
-  }
 
-  offPokemonSocket = () => {
-        this.database.ref('pokemons').off()
+
+  addPokemon = async (data) => {
+    const res = await fetch(`${this.host}/${this.localID}/pokemons.json?auth=${this.token()}`, {
+      method: 'POST',
+      body: JSON.stringify(data)
+    }).then(res => res.json())
+    return res;
   }
 
 }

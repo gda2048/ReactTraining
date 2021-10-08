@@ -29,7 +29,7 @@ const NavBar = ({openMenu, onChangeMenu, bgActive, onClickLogin, onClickLogout})
                         </div>)
                     }
                     {(!isLoadingUser && localId) &&
-                        <div>
+                        <div className={s.loginAndMenu}>
                             <Link className={s.loginWrap} to="/user">
                                 <UserSVG/>
                             </Link>

@@ -3,7 +3,6 @@ import { selectUser } from '../../../store/user'
 
 const UserPage = () => {
 	const user = useSelector(selectUser)
-	console.log('USER', user)
 	return (
 	    <div>
             User {user.localId}

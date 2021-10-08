@@ -39,7 +39,6 @@ export const getUserUpdateAsync = () => async (dispatch) => {
             localStorage.removeItem('idToken')
         } else {
             dispatch(updateUser(response.users[0]))
-            console.log('ru', response.users[0])
         }
     } else {
         dispatch(removeUser());

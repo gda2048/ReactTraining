@@ -10,10 +10,11 @@ const PlayerBoard = ({turn, player, cards, onClickCard}) => {
             {
                 cards.map((item) => {
                     return (<div className={cn(s.cardBoard,
-                                               {[s.selected]: isSelected === item.id})}
+                                               {[s.selected]: item.selected})}
                          onClick={() => {
                              if (turn === player) {
                                  setSelected(item.id);
+                                 item.selected = !item.selected;
                                  onClickCard && onClickCard({player, ...item});
                              }
                          }}>
