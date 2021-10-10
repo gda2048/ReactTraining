@@ -4,19 +4,19 @@ import PokemonCard from "../../../../PokemonCard";
 import {useState} from "react";
 import {useHistory} from "react-router-dom";
 import FirebaseClass from "../../../../../services/firebase";
-import {useSelector} from "react-redux";
-import {selectP1, selectP2, selectIsFinished} from "../../../../../store/board";
-import {selectLocalId} from "../../../../../store/user";
+import {useDispatch, useSelector} from "react-redux";
+import {selectPlayer1, selectPlayer2, selectIsFinished, emptyBoard} from "../../../../../store/board";
+import {emptyPokemons} from "../../../../../store/pokemons";
 
 
 const FinishPage = () => {
-    const p1 = useSelector(selectP1)
-    const p2 = useSelector(selectP2)
+    const p1 = useSelector(selectPlayer1)
+    const p2 = useSelector(selectPlayer2)
     const isFinished = useSelector(selectIsFinished)
     const history = useHistory();
     const [cardID, setCardID] = useState(null)
     const [card, setCard] = useState(null)
-    const localId = useSelector(selectLocalId)
+    const dispatch = useDispatch()
 
     const handleClick = (item) => {
         if (item.id === cardID){
@@ -29,12 +29,15 @@ const FinishPage = () => {
     }
     const finishGame = async () => {
        if (card && cardID) {
-           await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'}, localId)
+           console.log(card, 'card')
+           const res = await FirebaseClass.addPokemon({...card, player:1, possession: 'blue'})
+           dispatch(emptyBoard())
+           dispatch(emptyPokemons())
        }
        history.replace('/game')
     }
     if (!isFinished){
-        finishGame()
+        history.replace('/game')
     }
 
     return (

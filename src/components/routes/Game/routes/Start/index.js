@@ -5,10 +5,10 @@ import {useEffect, useState} from "react";
 import {useHistory} from 'react-router-dom'
 
 import {
-    selectPokemonsData, getPokemonsAsync, selectPok, selectSelectedPokemons, emptyPokemons,
+    selectPokemonsData, getPokemonsAsync, selectPok, emptyPokemons, selectSelectedPokemons,
 } from "../../../../../store/pokemons";
 import {useDispatch, useSelector} from "react-redux";
-import {emptyBoard} from "../../../../../store/board";
+import {emptyBoard, setPlayer1} from "../../../../../store/board";
 
 
 const StartPage = ({onChangePage}) => {
@@ -20,13 +20,12 @@ const StartPage = ({onChangePage}) => {
 
     const history = useHistory()
     const StartGameClick = () => {
+        dispatch(setPlayer1(Object.values(pokemonsSelectedRedux)));
         history.push('/game/board')
     }
 
 
     useEffect(() => {
-        dispatch(emptyBoard())
-        dispatch(emptyPokemons())
         dispatch(getPokemonsAsync());
     }, [])
     useEffect(() => {

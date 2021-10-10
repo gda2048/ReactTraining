@@ -6,8 +6,7 @@ import Draw from './assets/draw.png';
 import {useHistory} from "react-router-dom";
 
 const Result = ({ type }) => {
-   console.log(type, 'type')
-    const [url, setUrl] = useState(null);
+   const [url, setUrl] = useState(null);
    const history = useHistory()
 
    useEffect(() => {

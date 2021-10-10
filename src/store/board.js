@@ -9,13 +9,15 @@ export const slice = createSlice({
 
     },
     reducers: {
+        setPlayer1: (state, {payload: data}) => ({...state, p1: data}),
+        setPlayer2: (state, {payload: data}) => ({...state, p2: data}),
         fill: (state, {payload: data}) => ({...state, ...data}),
         emptyBoard: (state, actions) => ({p1: [], p2: [], isFinished: false})
     }
 })
 
-export const {fill, emptyBoard} = slice.actions;
+export const {setPlayer1, setPlayer2, fill, emptyBoard} = slice.actions;
 export const selectIsFinished = state => state.board.isFinished;
-export const selectP1 = state => state.board.p1;
-export const selectP2 = state => state.board.p2;
+export const selectPlayer1 = state => state.board.p1;
+export const selectPlayer2 = state => state.board.p2;
 export default slice.reducer;

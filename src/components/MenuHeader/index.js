@@ -7,6 +7,7 @@ import {NotificationManager} from "react-notifications";
 import {useDispatch} from "react-redux";
 import {getUserAsync, removeUser} from "../../store/user";
 import {useHistory} from "react-router-dom";
+import firebase from '../../services/firebase'
 
 const KEY = 'AIzaSyDqdkgenjUR8ch9nA3ceshvxYaxB3ZdWmg'
 
@@ -58,6 +59,7 @@ const MenuHeader = ({ bgActive = false }) => {
                     })
                 }
             }
+            firebase.setLocalID(response.localId)
             localStorage.setItem('idToken', response.idToken)
             NotificationManager.success('Success message');
             dispatch(getUserAsync())
